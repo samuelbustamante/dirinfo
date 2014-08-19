@@ -1,0 +1,74 @@
+{% extends "tickets/base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-header">
+                <h1>Tickets</h1>
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Descripción</th>
+                        <th>Estado</th>
+
+                        {% if  perms.tickets.can_view_priority or perms.tickets.can_change_priority %}
+                            <th>Creado</th>
+                        {% endif %}
+
+                        <!-- Assigned -->
+                        {% if perms.tickets.can_assigned %}
+                            <th>Asignado</th>
+                        {% endif %}
+
+                        <!-- Priority -->
+                        {% if  perms.tickets.can_view_priority or perms.tickets.can_change_priority %}
+                            <th>Prioridad</th>
+                        {% endif %}
+                        <th>Creado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for ticket in ticket_list %}
+                    <tr>
+                        <!-- Title -->
+                        <td><a href="{% url 'tickets:detail' ticket.id %}">{{ ticket.title|truncatechars:40 }}</a></td>
+
+                        <!-- Description -->
+                        <td>{{ ticket.description|truncatechars:40 }}</td>
+
+                        <!-- Status -->
+                        <td>{{ ticket.get_status_display }}{% if perms.tickets.can_change_status %}&nbsp;<a href="{% url 'tickets:change_status' ticket.pk %}"><small>(Cambiar)</small></a>{% endif %}</td>
+
+                        {% if  perms.tickets.can_view_priority or perms.tickets.can_change_priority %}
+                            <td>{{ ticket.created_by }}</td>
+                        {% endif %}
+
+                        <!-- Assined -->
+                        {% if perms.tickets.can_assigned %}
+                            {% if ticket.assigned.all %}
+                                <td>
+                                    {% for assigned in ticket.assigned.all %}{{ assigned }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                                    <a href="{% url 'tickets:change_assigned' ticket.pk %}"><small>(Cambiar)</small></a></td>
+                            {% else %}
+                                <td><a href="{% url 'tickets:change_assigned' ticket.pk %}">Asignar</a></td>
+                            {% endif %}
+                        {% endif %}
+
+                        <!-- Priority -->
+                        {% if perms.tickets.can_view_priority %}
+                            <td>{{ ticket.get_priority_display }}</td>
+                        {% elif perms.tickets.can_change_priority %}
+                            <td>{{ ticket.get_priority_display }}&nbsp;<a href="{% url 'tickets:change_assigned' ticket.pk %}"><small>(Cambiar)</small></a></td>
+                        {% endif %}
+                        <td>{{ ticket.created_on|date:"m/d/Y H:i" }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

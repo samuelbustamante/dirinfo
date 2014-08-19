@@ -1,0 +1,28 @@
+{% extends "tickets/base.html" %}
+
+{% load bootstrap3 %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1 class="page-header">{{ ticket.title }}</h1>
+            <p>{{ ticket.description }}</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h2 class="page-header">Comentarios</h2>
+            {% for comment in ticket.comments.all %}
+                <p><strong>{{ comment.created_by }}:</strong>&nbsp;{{ comment }}</p>
+                <hr>
+            {% endfor %}
+            <form action="." method="post" class="form">
+                {% csrf_token %}
+                {% bootstrap_form comment_form %}
+                <button type="submit" class="btn btn-primary">Comentar</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
