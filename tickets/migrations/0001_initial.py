@@ -36,7 +36,7 @@ class Migration(migrations.Migration):
                 ('created_on', models.DateTimeField(auto_now_add=True)),
                 ('status', models.PositiveSmallIntegerField(default=0, choices=[(0, 'Abierto'), (1, 'En proceso'), (2, 'Atrazado'), (3, 'Resuelto'), (4, 'Cerrado')])),
                 ('priority', models.PositiveSmallIntegerField(default=1, choices=[(0, 'Baja'), (1, 'Normal'), (2, 'Alta')])),
-                ('assigned', models.ManyToManyField(to=settings.AUTH_USER_MODEL, null=True)),
+                ('assigned', models.ManyToManyField(to=settings.AUTH_USER_MODEL, null=True, blank=True)),
                 ('created_by', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],
             options={

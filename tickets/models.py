@@ -42,8 +42,8 @@ class Ticket(models.Model):
                                               choices=STATUS_CHOICES)
     priority = models.PositiveSmallIntegerField(default=PRIORITY_NORMAL,
                                                 choices=PRIORITY_CHOICES)
-    assigned = models.ManyToManyField(User, null=True,
-                                 related_name="tickets_assigned")
+    assigned = models.ManyToManyField(User, null=True, blank=True,
+                                      related_name="tickets_assigned")
 
     def get_absolute_url(self):
         return reverse("tickets:detail", args=[str(self.id)])
